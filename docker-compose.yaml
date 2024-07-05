@@ -1,0 +1,80 @@
+version: "3.8"
+name: exchange
+services:
+    app:
+        # restart: always
+        restart: no
+        build:
+            context: "."
+            dockerfile: Dockerfile
+        image: exchange:local
+        ports:
+            - "8080:8080"
+        expose:
+            - 8080
+        networks:
+            - app
+        command: ["main"]
+        environment:
+            - ENV=development
+        depends_on:
+            - postgres
+            - db-migrate
+    cronjob:
+        restart: no
+        build:
+            context: "."
+            dockerfile: Dockerfile
+        image: exchange:local
+        networks:
+            - app
+        command: ["cronjob"]
+        environment:
+            - ENV=development
+        depends_on:
+            - postgres
+            - cron
+
+    cron:
+        image: docker
+        restart: unless-stopped
+        volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+        command: ["/bin/sh", "-c", "while true; do sleep 10; docker restart exchange-cronjob-1; done"]
+
+    postgres:
+        image: postgres
+        restart: always
+        shm_size: 128mb
+        environment:
+            POSTGRES_PASSWORD: 12345678
+        # volumes:
+        #     - db:/var/lib/postgresql/data
+        expose:
+            - 5432
+        # ports:
+        #     - "5432:5432"
+        networks:
+            - app
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8081:8080
+        networks:
+            - app
+    db-migrate:
+        restart: no
+        build:
+            context: "./db_versions"
+            dockerfile: "./Dockerfile"
+        image: db-migrate:local
+        environment:
+            PGPASSWORD: 12345678
+        networks:
+            - app
+        depends_on:
+            - postgres
+# volumes:
+#     db:
+networks:
+    app:
