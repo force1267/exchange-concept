@@ -59,7 +59,9 @@ if [[ "$WAIT" != "0" ]]; then
 fi
 sleep $WAIT
 
+psql --host=$HOST --port=$PORT --user=postgres -c "CREATE DATABASE exchange;"
+
 for sql in $(ls | grep .sql); do
     echo runing $sql:
-    psql --host=$HOST --port=$PORT --user=postgres --file=$(realpath $sql)
+    psql --host=$HOST --port=$PORT --user=postgres --dbname=exchange --file=$(realpath $sql)
 done
