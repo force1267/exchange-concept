@@ -1,4 +1,4 @@
-# Example API
+# Exchange Concept API
 
 ## how to run
 on a `linux` os do:
