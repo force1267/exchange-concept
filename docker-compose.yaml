@@ -2,8 +2,8 @@ version: "3.8"
 name: exchange
 services:
     app:
-        # restart: always
-        restart: no
+        restart: always
+        # restart: no
         build:
             context: "."
             dockerfile: Dockerfile

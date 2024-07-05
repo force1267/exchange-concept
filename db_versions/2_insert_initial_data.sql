@@ -1,8 +1,8 @@
 
 
 
-INSERT INTO account (user_id, balance) VALUES (1, 1425);
-INSERT INTO account (user_id, balance) VALUES (2, 11);
+INSERT INTO account (user_id, balance) VALUES (1, 14250);
+INSERT INTO account (user_id, balance) VALUES (2, 1100);
 
 INSERT INTO wallet (user_id, crypto, balance) VALUES (1, 'ABAN', 12);
 INSERT INTO wallet (user_id, crypto, balance) VALUES (1, 'BTC', 9);

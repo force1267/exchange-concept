@@ -73,4 +73,4 @@ crypto_list: List[Type[Crypto]] = [
     BTC
 ]
 
-crypto_name_to_class: Dict[Type[Crypto], str] = {class_object.symbol(): class_object for class_object in crypto_list}
+crypto_name_to_class: Dict[str, Type[Crypto]] = {class_object.symbol(): class_object for class_object in crypto_list}
