@@ -15,7 +15,7 @@ CREATE TABLE wallet (
 );
 
 
-CREATE TYPE invoice_status AS ENUM ('Unknown', 'Pending', 'Success', 'Failed', 'Settled');
+CREATE TYPE invoice_status AS ENUM ('Unknown', 'Pending', 'Success', 'Failed', 'Settling', 'Settled');
 CREATE TABLE invoice (
     id SERIAL PRIMARY KEY,
     fk_account INT,

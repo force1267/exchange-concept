@@ -1,11 +1,15 @@
 from typing import Tuple
 
 from app.controller.exceptions import CryptoNotSupported, DBError, LowBalance
+from app.controller.foreign_exchange import buy_from_exchange
 
 from app.model.crypto import Crypto
 from app.model.account import Account
 from app.model.wallet import Wallet
-from app.model.invoice import Invoice
+from app.model.invoice import Invoice, InvoiceStatus
+
+from config.exchage import EXCHANGE_MIN_TRANSACTION_CENTS
+
 
 def buy(user, crypto, amount) -> dict:
     if not Crypto.is_supported(crypto):
@@ -31,13 +35,19 @@ def buy(user, crypto, amount) -> dict:
         raise DBError(e)
 
     try:
-        invoice = Invoice.generate_and_pay_buy_invoice(account, wallet, amount)
+        invoice, price = Invoice.generate_and_pay_buy_invoice(account, wallet, amount)
     except LowBalance as e:
         raise e
     except Exception as e:
         raise DBError(e)
 
-    
+    # here can use something like celery
+    # we can also let the buy happen with cronjob
+    if price > EXCHANGE_MIN_TRANSACTION_CENTS:
+        invoice.update_status(InvoiceStatus.Settling)
+        buy_from_exchange(crypto, amount)
+        invoice.update_status(InvoiceStatus.Settled)
+
     return {
         'invoice': invoice.id,
         'account': invoice.account.id,

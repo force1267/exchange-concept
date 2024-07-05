@@ -1,4 +1,4 @@
 
 
 def buy_from_exchange(crypto, amount):
-    pass
+    print('buying from exchange:', crypto, amount)

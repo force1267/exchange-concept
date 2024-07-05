@@ -1,5 +1,5 @@
-
+from app.controller.settle import settle
 
 
 def cronjob():
-    print("cronjob is running")
+    settle()
