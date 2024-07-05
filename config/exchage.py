@@ -1,0 +1,3 @@
+import os
+
+EXCHANGE_MIN_TRANSACTION_CENTS = int(os.environ.get('EXCHANGE_MIN_TRANSACTION_CENTS', '1000'))
